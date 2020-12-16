@@ -125,5 +125,6 @@ window.addEventListener("DOMContentLoaded", function () {
       });
     });
   };
+  
   animateServiceBlock();
 });
