@@ -91,24 +91,35 @@ window.addEventListener("DOMContentLoaded", function () {
     popupBtn.forEach((elem) => {
       elem.addEventListener("click", () => {
         popup.style.display = "block";
-        const timer = setInterval(() => {
-          if (op >= 1) {
-            clearInterval(timer);
-          }
+        if(document.documentElement.clientWidth > 768){
+          const timer = setInterval(() => {
+            if (op >= 1) {
+              clearInterval(timer);
+            }
+            popup.style.opacity = op;
+            op += op * 0.1;
+          }, 10);
+        }else {
+          op = 1;
           popup.style.opacity = op;
-          op += op * 0.1;
-        }, 10);
+        }
       });
     });
     popupClose.addEventListener("click", () => {
-      const timer = setInterval(() => {
-        if (op <= 0.1) {
-          clearInterval(timer);
-          popup.style.display = "none";
-        }
+      if(document.documentElement.clientWidth > 768){
+        const timer = setInterval(() => {
+          if (op <= 0.1) {
+            clearInterval(timer);
+            popup.style.display = "none";
+          }
+          popup.style.opacity = op;
+          op -= op * 0.1;
+        }, 10);
+      } else {
+        op = 0.1;
         popup.style.opacity = op;
-        op -= op * 0.1;
-      }, 10);
+        popup.style.display = "none";
+      }
     });
   };
   togglePopUp();
