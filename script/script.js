@@ -51,7 +51,10 @@ window.addEventListener("DOMContentLoaded", function () {
 
   //menu
   const toggleMenu = () => {
-    const menu = document.querySelector("menu"),
+    const btnMenu = document.querySelector(".menu"),
+      menu = document.querySelector("menu"),
+      closeBtn = document.querySelector(".close-btn"),
+      menuItems = menu.querySelectorAll("ul>li"),
       body = document.querySelector("body");
 
     const handlerMenu = () => {
@@ -71,15 +74,17 @@ window.addEventListener("DOMContentLoaded", function () {
         handlerMenu();
       } else {
         target = target.closest("li");
-        handlerMenu();
-        //плавная прокрутка
-        event.preventDefault();
-        const blockID = target.firstChild.getAttribute("href");
-        const block = document.querySelector(blockID);
-        block.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
+        if (target) {
+          handlerMenu();
+          //плавная прокрутка
+          event.preventDefault();
+          const blockID = target.firstChild.getAttribute("href");
+          const block = document.querySelector(blockID);
+          block.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }
       }
     });
   };
