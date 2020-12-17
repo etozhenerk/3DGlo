@@ -66,24 +66,23 @@ window.addEventListener("DOMContentLoaded", function () {
       target = target.closest(".menu");
       if (target) {
         handlerMenu();
-      }
-    });
-    menu.addEventListener("click", (event) => {
-      let target = event.target;
-      if (target.classList.contains("close-btn")) {
-        handlerMenu();
       } else {
-        target = target.closest("li");
-        if (target) {
+        target = event.target;
+        if (target.classList.contains("close-btn") || !target.closest("menu")) {
           handlerMenu();
-          //плавная прокрутка
-          event.preventDefault();
-          const blockID = target.firstChild.getAttribute("href");
-          const block = document.querySelector(blockID);
-          block.scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-          });
+        } else {
+          target = target.closest("li");
+          if (target) {
+            handlerMenu();
+            //плавная прокрутка
+            event.preventDefault();
+            const blockID = target.firstChild.getAttribute("href");
+            const block = document.querySelector(blockID);
+            block.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+          }
         }
       }
     });
