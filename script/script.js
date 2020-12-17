@@ -51,10 +51,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
   //menu
   const toggleMenu = () => {
-    const btnMenu = document.querySelector(".menu"),
-      menu = document.querySelector("menu"),
-      closeBtn = document.querySelector(".close-btn"),
-      menuItems = menu.querySelectorAll("ul>li"),
+    const menu = document.querySelector("menu"),
       body = document.querySelector("body");
 
     const handlerMenu = () => {
@@ -68,10 +65,10 @@ window.addEventListener("DOMContentLoaded", function () {
         handlerMenu();
       } else {
         target = event.target;
-        if (target.classList.contains("close-btn") || !target.closest("menu")) {
+        if ((target.classList.contains("close-btn") || !target.closest("menu")) && menu.classList.contains("active-menu")) {
           handlerMenu();
         } else {
-          target = target.closest("li");
+          target = target.closest("menu li");
           if (target) {
             handlerMenu();
             //плавная прокрутка
