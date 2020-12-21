@@ -200,15 +200,15 @@ window.addEventListener("DOMContentLoaded", function () {
   //слайдер
   const slider = () => {
     const slide = document.querySelectorAll(".portfolio-item"),
-    portfolioDots = document.querySelector('.portfolio-dots'),
+      portfolioDots = document.querySelector(".portfolio-dots"),
       slider = document.querySelector(".portfolio-content");
 
-      for(let i = 0; i < slide.length; i ++ ){
-        let dot = document.createElement('li');
-        dot.classList.add('dot');
-        portfolioDots.append(dot);
-      }
-    const  dot = document.querySelectorAll(".dot");
+    for (let i = 0; i < slide.length; i++) {
+      let dot = document.createElement("li");
+      dot.classList.add("dot");
+      portfolioDots.append(dot);
+    }
+    const dot = document.querySelectorAll(".dot");
     let currentSlide = 0,
       interval;
 
@@ -290,4 +290,38 @@ window.addEventListener("DOMContentLoaded", function () {
   };
 
   slider();
+  
+  // по наведению мышкой меняются фотографии, а если увести мышку с элемента то возвращается прежняя фото
+  const changeCommadPhoto = () => {
+    const command = document.querySelector(".command"),
+      src = {};
+    command.addEventListener("mouseover", (event) => {
+      const target = event.target;
+      if (target.matches(".command__photo")) {
+        src[target.dataset.img] = target.src;
+        target.src = target.dataset.img;
+      }
+    });
+    command.addEventListener("mouseout", (event) => {
+      const target = event.target;
+      if (target.matches(".command__photo")) {
+        target.src = src[target.dataset.img];
+      }
+    });
+  };
+
+  changeCommadPhoto();
+
+//В калькуляторе ввод только цифр
+  const formValidation = () => {
+    const form = document.querySelector(".calc-block");
+    form.addEventListener("input", (event) => {
+      const target = event.target;
+      if (target.matches("input.calc-item")) {
+        target.value = target.value.replace(/\D/, "");
+      }
+    });
+  };
+
+  formValidation();
 });
