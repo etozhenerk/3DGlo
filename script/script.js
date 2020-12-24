@@ -48,7 +48,7 @@ window.addEventListener("DOMContentLoaded", function () {
     updateClock();
   };
 
-  timerId = setInterval(countTimer, 1000, "23 december 2020 12:11");
+  timerId = setInterval(countTimer, 1000, "25 december 2020 12:11");
 
   //menu
   const toggleMenu = () => {
@@ -388,4 +388,78 @@ window.addEventListener("DOMContentLoaded", function () {
   };
 
   calc(100);
+
+  // send ajax form
+  const sendForm = (idform) => {
+    const errorMessage = "Что-то пошло не так...",
+      loadMessage = "Загрузка...",
+      successMessage = "Спасибо! Мы скоро с вами свяжемся!";
+
+    const form = document.getElementById(idform);
+
+    const statusMessage = document.createElement("div");
+    statusMessage.style.cssText = `
+    font-size: 2rem;
+    color:green`;
+
+    const postData = (body, outputData, errorData) => {
+      const request = new XMLHttpRequest();
+
+      request.addEventListener("readystatechange", () => {
+        if (request.readyState !== 4) {
+          return;
+        }
+        if (request.status === 200) {
+          outputData();
+        } else {
+          errorData(request.status);
+        }
+      });
+
+      request.open("POST", "./server.php");
+      request.setRequestHeader("Content-Type", "application/json");
+      request.send(JSON.stringify(body));
+    };
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      form.appendChild(statusMessage);
+      statusMessage.textContent = loadMessage;
+      const formData = new FormData(form);
+      let body = {};
+
+      formData.forEach((val, key) => {
+        body[key] = val;
+      });
+      postData(
+        body,
+        () => {
+          statusMessage.textContent = successMessage;
+        },
+        (error) => {
+          statusMessage.textContent = errorMessage;
+          console.error(error);
+        }
+      );
+      const elementsForm = [...form.elements].filter((item) => {
+        return item.tagName.toLowerCase() !== "button" && item.type !== "button";
+      });
+      elementsForm.forEach(elem => {
+        elem.value = '';
+      });
+    });
+    form.addEventListener("input", (event) => {
+      const target = event.target,
+      targetAttr = target.getAttribute("name");
+      if (targetAttr === "user_name" || targetAttr === "user_message") {
+        target.value = target.value.replace(/[-\.;":'=!№%\?\*\(\)\{\[\]\}~@#\$\^\+&_><0-9a-zA-Z]/, "");
+      } else if(targetAttr === "user_phone") {
+        target.value = target.value.replace(/[-\.;":'=!№%\?\*\(\)\{\[\]\}~@#\$\^&_><a-zA-Zа-яА-Я]/, "");
+      }
+    });
+  };
+
+  sendForm("form1");
+  sendForm("form2");
+  sendForm("form3");
 });
