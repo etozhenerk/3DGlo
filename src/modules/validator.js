@@ -16,13 +16,60 @@ class Validator {
       elem.addEventListener("change", this.checkIt.bind(this))
     );
     this.form.addEventListener("submit", (event) => {
-      this.elementsForm.forEach(elem => this.checkIt({target: elem}));
-      if (this.error.size) {
-        event.preventDefault();
+      event.preventDefault();
+      if (this.form.lastElementChild.classList.contains("statusMessage")) {
+        this.form.lastChild.remove();
+      }
+      this.elementsForm.forEach((elem) => this.checkIt({ target: elem }));
+      if (!this.error.size) {
+        this.sendForm("Загрузка...");
+        const formData = new FormData(this.form);
+        let body = {};
+
+        formData.forEach((val, key) => {
+          body[key] = val;
+        });
+        this.postData(body)
+          .then((response) => {
+            if (response.status !== 200) {
+              throw new Error("status network not 200");
+            }
+            this.sendForm("Спасибо! Мы скоро с вами свяжемся!");
+          })
+          .catch((error) => {
+            this.sendForm("Что-то пошло не так...");
+            console.error(error);
+          });
+        this.elementsForm.forEach((elem) => {
+          elem.value = "";
+        });
       }
     });
   }
 
+  postData(body) {
+    return fetch("./server.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+  }
+  sendForm(message) {
+    if (this.form.lastElementChild.classList.contains("statusMessage")) {
+      this.form.lastChild.textContent = message;
+    } else {
+      const statusMessage = document.createElement("div");
+      statusMessage.classList.add("statusMessage");
+      statusMessage.style.cssText = `
+      font-size: 2rem;
+      color:green`;
+
+      this.form.appendChild(statusMessage);
+      statusMessage.textContent = message;
+    }
+  }
   isValid(elem) {
     const validatorMethod = {
       notEmpty(elem) {
@@ -43,7 +90,9 @@ class Validator {
           validatorMethod[item[0]](elem, this.pattern[item[1]])
         );
       } else {
-        console.warn('Необъодимо передать id полей ввода и методы проверки этих полей');
+        console.warn(
+          "Необъодимо передать id полей ввода и методы проверки этих полей"
+        );
       }
     }
 
@@ -114,3 +163,6 @@ class Validator {
     }
   }
 }
+
+
+export default Validator;
