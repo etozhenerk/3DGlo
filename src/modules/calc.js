@@ -6,6 +6,8 @@ const calc = (price = 100) => {
     calcCount = document.querySelector(".calc-count"),
     totalValue = document.getElementById("total");
 
+  const intervals = new Set();
+
   const countSum = () => {
     let total = 0,
       countValue = 1,
@@ -13,6 +15,8 @@ const calc = (price = 100) => {
       count = 0,
       time = 10,
       step = 10;
+  
+    
     const typeValue = calcType.options[calcType.selectedIndex].value,
       squareValue = +calcSquare.value;
 
@@ -27,14 +31,21 @@ const calc = (price = 100) => {
     }
 
     if (typeValue && squareValue) {
-      total = price * typeValue * squareValue * countValue * dayValue;
+      total = Math.floor(price * typeValue * squareValue * countValue * dayValue);
       if (total > 10000) {
         step = 100;
       }
+
       let oneTime = Math.round(time / step / total);
       let interval = setInterval(() => {
+        intervals.add(interval);
         count = count + step;
-
+        if((total - count) <= 100){
+          step = 10;
+        }
+        if((total - count) <= 10) {
+          step = 1;
+        }
         if (count === total) {
           clearInterval(interval);
         }
@@ -46,6 +57,9 @@ const calc = (price = 100) => {
   };
 
   calcBlock.addEventListener("change", (event) => {
+    intervals.forEach(interval => {
+      clearInterval(interval);
+    });
     const target = event.target;
     if (
       target === calcType ||
@@ -53,7 +67,9 @@ const calc = (price = 100) => {
       target === calcDay ||
       target === calcCount
     ) {
+
       countSum();
+
     }
   });
 };

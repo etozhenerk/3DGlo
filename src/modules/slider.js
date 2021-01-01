@@ -6,6 +6,9 @@ const slider = () => {
   for (let i = 0; i < slide.length; i++) {
     let dot = document.createElement("li");
     dot.classList.add("dot");
+    if(i === 0){
+      dot.classList.add("dot-active");
+    }
     portfolioDots.append(dot);
   }
   const dot = document.querySelectorAll(".dot");
