@@ -43,6 +43,7 @@ class Validator {
         this.elementsForm.forEach((elem) => {
           elem.value = "";
         });
+       
       }
     });
   }
@@ -59,6 +60,9 @@ class Validator {
   sendForm(message) {
     if (this.form.lastElementChild.classList.contains("statusMessage")) {
       this.form.lastChild.textContent = message;
+      setTimeout(() => {
+        this.form.lastChild.remove();
+      }, 5000);
     } else {
       const statusMessage = document.createElement("div");
       statusMessage.classList.add("statusMessage");
@@ -69,6 +73,9 @@ class Validator {
       this.form.appendChild(statusMessage);
       statusMessage.textContent = message;
     }
+
+    
+
   }
   isValid(elem) {
     const validatorMethod = {

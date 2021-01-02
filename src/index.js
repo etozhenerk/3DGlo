@@ -11,7 +11,7 @@ import toggleMenu from './modules/toggleMenu';
 import togglePopUp from './modules/togglePopUp';
 import Validator from './modules/validator';
 
-countTimer("31 december 2020 18:10");
+countTimer("3 january 2021 18:10");
 
 //menu
 toggleMenu();
